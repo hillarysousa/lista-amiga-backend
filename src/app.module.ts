@@ -2,9 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ListsModule } from './routes/lists/lists.module';
+import { List } from './routes/lists/entities/list.entity';
+import { Item } from './routes/items/entities/item.entity';
 
 @Module({
   imports: [
+    ListsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',
@@ -12,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'postgres',
-      entities: [],
+      entities: [List, Item],
       synchronize: true,
       autoLoadEntities: true,
     }),
