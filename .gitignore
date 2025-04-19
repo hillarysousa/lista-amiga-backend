@@ -60,3 +60,4 @@ pgdata
 
 #Firebase
 firebase-service-account.json
+firebase.ts
