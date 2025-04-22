@@ -140,7 +140,16 @@ npm run typeorm:revert-migration
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a Creative Commons Atribuição-NãoComercial 4.0 Internacional (CC BY-NC 4.0).
+
+Você pode:
+
+- Compartilhar e adaptar o código para fins não comerciais.
+
+- Usar o código para fins comerciais somente com permissão expressa.
+
+A licença completa pode ser encontrada em:
+[Creative Commons BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br).
 
 ---
 
