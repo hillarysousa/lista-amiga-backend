@@ -27,6 +27,7 @@
     "src/**/*.ts",
     "src/**/*.js",
     "typeorm.config.ts",
-    "firebase.ts"
+    "firebase.ts",
+    "env.cconfig.ts"
   ]
 }

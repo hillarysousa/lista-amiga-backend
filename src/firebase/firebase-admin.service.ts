@@ -1,7 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import dotenv from 'dotenv';
-dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
