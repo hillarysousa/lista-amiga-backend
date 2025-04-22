@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { List as ListInterface } from './lists.interface';
 import { List as ListEntity } from './entities/list.entity';
 import { User as UserEntity } from '../user/entities/user.entity';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../user/auth.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
 
@@ -17,32 +17,46 @@ export class ListsService {
     @InjectRepository(ListEntity)
     private readonly listRepository: Repository<ListEntity>,
 
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-
     private readonly authService: AuthService,
   ) {}
 
   findAll(): Promise<ListEntity[]> {
     return this.listRepository.find({
-      relations: ['items', 'owner'],
+      relations: ['items', 'items.owner', 'owner', 'participants'],
     });
   }
 
   findOwnLists(userId: string): Promise<ListEntity[]> {
-    return this.listRepository.find({ where: { owner: { uid: userId } } });
+    return this.listRepository.find({
+      where: { owner: { uid: userId } },
+      relations: ['items', 'items.owner', 'participants'],
+    });
   }
 
   findSharedLists(userId: string): Promise<ListEntity[]> {
     return this.listRepository.find({
       where: { participants: { uid: userId } },
+      relations: ['items', 'items.owner'],
     });
   }
 
-  async findOne(id: string): Promise<ListEntity | null> {
+  async findListParticipants(listId: string): Promise<UserEntity[]> {
+    const list = await this.listRepository.findOne({
+      where: { id: listId },
+      relations: ['participants'],
+    });
+
+    if (!list) {
+      throw new NotFoundException('Lista não encontrada');
+    }
+
+    return list.participants;
+  }
+
+  async findOne(listId: string): Promise<ListEntity | null> {
     const result = await this.listRepository.findOne({
-      where: { id },
-      relations: ['items'],
+      where: { id: listId },
+      relations: ['items', 'items.owner', 'participants', 'owner'],
     });
 
     if (!result) {
@@ -64,16 +78,19 @@ export class ListsService {
     return this.listRepository.save(list);
   }
 
-  updateList(id: string, updateListDto: UpdateListDto): Promise<ListEntity> {
+  updateList(
+    listId: string,
+    updateListDto: UpdateListDto,
+  ): Promise<ListEntity> {
     const list: ListEntity = new ListEntity();
-    list.id = id;
+    list.id = listId;
     list.name = updateListDto.name;
 
     return this.listRepository.save(list);
   }
 
-  async createShareToken(id: string): Promise<string> {
-    const list = await this.listRepository.findOne({ where: { id } });
+  async createShareToken(listId: string): Promise<string> {
+    const list = await this.listRepository.findOne({ where: { id: listId } });
 
     if (!list) {
       throw new NotFoundException('Lista não encontrada');
@@ -126,7 +143,34 @@ export class ListsService {
     return list;
   }
 
-  deleteList(id: string): Promise<DeleteResult> {
-    return this.listRepository.delete({ id });
+  async kickUserFromList(listId: string, userId: string): Promise<ListEntity> {
+    const list = await this.listRepository.findOne({
+      where: { id: listId },
+      relations: ['participants'],
+    });
+
+    const user = await this.authService.findUser(userId);
+
+    if (!list) {
+      throw new NotFoundException('Lista não encontrada');
+    }
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const isParticipant = list.participants.some((p) => p.uid === userId);
+
+    if (isParticipant) {
+      const filteredOutUser = list.participants.filter((u) => u.uid !== userId);
+      list.participants = filteredOutUser;
+      await this.listRepository.save(list);
+    }
+
+    return list;
+  }
+
+  deleteList(listId: string): Promise<DeleteResult> {
+    return this.listRepository.delete({ id: listId });
   }
 }

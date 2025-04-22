@@ -1,8 +1,8 @@
 import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { List } from '../../lists/entities/list.entity';
-import { Item } from 'src/routes/items/entities/item.entity';
+import { Item } from '../../items/entities/item.entity';
 
-@Entity()
+@Entity('user')
 export class User {
   @PrimaryColumn()
   uid: string;

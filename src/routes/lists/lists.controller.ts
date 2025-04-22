@@ -16,7 +16,6 @@ import { UpdateListDto } from './dto/update-list.dto';
 import { CurrentUser } from 'src/firebase/current-user.decorator';
 
 @Controller('list')
-@UseGuards(FirebaseAuthGuard)
 export class ListsController {
   constructor(private listsService: ListsService) {}
 
@@ -26,21 +25,31 @@ export class ListsController {
   }
 
   @Get('own')
+  @UseGuards(FirebaseAuthGuard)
   findOwnLists(@CurrentUser('uid') userId: string) {
     return this.listsService.findOwnLists(userId);
   }
 
   @Get('shared')
-  findSharedLists(@CurrentUser('uid') userId: string) {
-    return this.listsService.findSharedLists(userId);
+  @UseGuards(FirebaseAuthGuard)
+  async findSharedLists(@CurrentUser('uid') userId: string) {
+    return await this.listsService.findSharedLists(userId);
+  }
+
+  @Get(':listId/participants')
+  @UseGuards(FirebaseAuthGuard)
+  findListParticipants(@Param('listId') listId: string) {
+    return this.listsService.findListParticipants(listId);
   }
 
   @Get(':id')
+  @UseGuards(FirebaseAuthGuard)
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.findOne(id);
   }
 
   @Post()
+  @UseGuards(FirebaseAuthGuard)
   create(
     @CurrentUser('uid') uid: string,
     @Body() createListDto: CreateListDto,
@@ -49,19 +58,22 @@ export class ListsController {
   }
 
   @Post('share/:id')
+  @UseGuards(FirebaseAuthGuard)
   createShareToken(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.createShareToken(id);
   }
 
   @Post('join/:shareToken')
+  @UseGuards(FirebaseAuthGuard)
   joinListByToken(
-    @Param('token', new ParseUUIDPipe()) token: string,
+    @Param('token') token: string,
     @CurrentUser('uid') uid: string,
   ) {
     return this.listsService.joinListByToken(token, uid);
   }
 
   @Patch(':id')
+  @UseGuards(FirebaseAuthGuard)
   edit(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateListDto: UpdateListDto,
@@ -70,11 +82,22 @@ export class ListsController {
   }
 
   @Patch('unshare/:id')
+  @UseGuards(FirebaseAuthGuard)
   revokeShareToken(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.revokeShareToken(id);
   }
 
+  @Patch(':listId/kick/:userId')
+  @UseGuards(FirebaseAuthGuard)
+  kickUserFromList(
+    @Param('listId', new ParseUUIDPipe()) listId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.listsService.kickUserFromList(listId, userId);
+  }
+
   @Delete(':id')
+  @UseGuards(FirebaseAuthGuard)
   delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.deleteList(id);
   }

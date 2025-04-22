@@ -1,15 +1,16 @@
-import { List } from 'src/routes/lists/entities/list.entity';
-import { User } from 'src/routes/user/entities/user.entity';
+import { List } from '../../lists/entities/list.entity';
+import { User } from '../../user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('item')
 export class Item {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -21,13 +22,15 @@ export class Item {
   checked: boolean;
 
   @ManyToOne(() => List, (list) => list.items, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'list_id' })
   list: List;
 
   @ManyToOne(() => User, (user) => user.items, {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  owner: User;
+  @JoinColumn({ name: 'owner_uid' })
+  owner: User | null;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;

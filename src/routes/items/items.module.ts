@@ -4,7 +4,7 @@ import { ItemsController } from './items.controller';
 import { ItemsService } from './items.service';
 import { Item } from './entities/item.entity';
 import { List } from '../lists/entities/list.entity';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../user/auth.service';
 import { FirebaseModule } from 'src/firebase/firebase.module';
 import { User } from '../user/entities/user.entity';
 

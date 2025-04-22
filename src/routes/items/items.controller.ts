@@ -7,11 +7,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { CurrentUser } from 'src/firebase/current-user.decorator';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
 
 @Controller('item')
 export class ItemsController {
@@ -42,12 +44,41 @@ export class ItemsController {
     return this.itemsService.createItem(createItemDto);
   }
 
+  @Post(':id/setOwner')
+  @UseGuards(FirebaseAuthGuard)
+  setItemOwner(@Param('id') id: string, @CurrentUser('uid') userId: string) {
+    return this.itemsService.setItemOwner(id, userId);
+  }
+
   @Patch(':id')
   edit(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateItemDto: UpdateItemDto,
   ) {
     return this.itemsService.updateItem(id, updateItemDto);
+  }
+
+  @Patch(':id/check')
+  @UseGuards(FirebaseAuthGuard)
+  checkItem(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser('uid') userId: string,
+  ) {
+    return this.itemsService.checkItem(id, userId);
+  }
+
+  @Patch(':id/uncheck')
+  @UseGuards(FirebaseAuthGuard)
+  uncheckItem(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser('uid') userId: string,
+  ) {
+    return this.itemsService.uncheckItem(id, userId);
+  }
+
+  @Patch(':id/removeOwner/:userId')
+  removeItemOwner(@Param('id') id: string, @Param('userId') userId: string) {
+    return this.itemsService.removeItemOwner(id, userId);
   }
 
   @Delete(':id')

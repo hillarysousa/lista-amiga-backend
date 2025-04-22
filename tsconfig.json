@@ -18,6 +18,14 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
-  }
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "paths": {
+      "src/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "typeorm.config.ts"
+  ]
 }
