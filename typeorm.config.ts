@@ -12,6 +12,10 @@ const configService = new ConfigService();
 
 export default new DataSource({
   type: 'postgres',
+  url: configService.get<string>('DB_URL'),
+  ssl: {
+    rejectUnauthorized: false, // necessário pro Neon
+  },
   host: configService.get<string>('DB_HOST') || 'localhost',
   port: parseInt(configService.get<string>('DB_PORT') || '5432', 10),
   username: configService.get<string>('DB_USERNAME'),
