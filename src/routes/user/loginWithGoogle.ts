@@ -1,4 +1,4 @@
-import { auth, provider, signInWithPopup } from '/etc/secrets/firebase';
+import { auth, provider, signInWithPopup } from '../../../firebase';
 
 export async function loginWithGoogle() {
   const result = await signInWithPopup(auth, provider);

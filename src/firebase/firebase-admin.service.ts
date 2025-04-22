@@ -1,6 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import * as serviceAccount from '/etc/secrets/firebase-service-account.json';
+import dotenv from 'dotenv';
+dotenv.config();
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
 
 @Injectable()
 export class FirebaseAdminService implements OnModuleInit {
