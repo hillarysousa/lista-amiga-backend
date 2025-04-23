@@ -57,7 +57,7 @@ export class ListsController {
     return this.listsService.createList(uid, createListDto);
   }
 
-  @Post('share/:id')
+  @Post(':id/share')
   @UseGuards(FirebaseAuthGuard)
   createShareToken(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.createShareToken(id);
@@ -81,7 +81,7 @@ export class ListsController {
     return this.listsService.updateList(id, updateListDto);
   }
 
-  @Patch('unshare/:id')
+  @Patch(':id/unshare')
   @UseGuards(FirebaseAuthGuard)
   revokeShareToken(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.listsService.revokeShareToken(id);
