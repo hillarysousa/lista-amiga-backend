@@ -25,6 +25,7 @@ export class ListsController {
   }
 
   @Get(':userId')
+  @UseGuards(FirebaseAuthGuard)
   findUserLists(@CurrentUser('uid') userId: string) {
     return this.listsService.findUserLists(userId);
   }
