@@ -24,13 +24,18 @@ export class ListsController {
     return this.listsService.findAll();
   }
 
-  @Get('own')
+  @Get(':userId')
+  findUserLists(@CurrentUser('uid') userId: string) {
+    return this.listsService.findUserLists(userId);
+  }
+
+  @Get('own/:userId')
   @UseGuards(FirebaseAuthGuard)
   findOwnLists(@CurrentUser('uid') userId: string) {
     return this.listsService.findOwnLists(userId);
   }
 
-  @Get('shared')
+  @Get('shared/:userId')
   @UseGuards(FirebaseAuthGuard)
   async findSharedLists(@CurrentUser('uid') userId: string) {
     return await this.listsService.findSharedLists(userId);

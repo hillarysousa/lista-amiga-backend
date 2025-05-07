@@ -26,6 +26,20 @@ export class ListsService {
     });
   }
 
+  async findUserLists(userId: string): Promise<ListEntity[]> {
+    const ownedLists = await this.listRepository.find({
+      where: { owner: { uid: userId } },
+      relations: ['items', 'items.owner', 'participants'],
+    });
+
+    const sharedLists = await this.listRepository.find({
+      where: { participants: { uid: userId } },
+      relations: ['items', 'items.owner'],
+    });
+
+    return [...ownedLists, ...sharedLists];
+  }
+
   findOwnLists(userId: string): Promise<ListEntity[]> {
     return this.listRepository.find({
       where: { owner: { uid: userId } },
