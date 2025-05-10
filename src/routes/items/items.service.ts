@@ -50,7 +50,7 @@ export class ItemsService {
   async findOwnItems(userId: string): Promise<ItemEntity[]> {
     return this.itemRepository.find({
       where: { owner: { uid: userId } },
-      relations: ['list'],
+      relations: ['list', 'owner'],
     });
   }
 
