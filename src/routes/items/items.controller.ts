@@ -35,6 +35,7 @@ export class ItemsController {
   }
 
   @Get('own')
+  @UseGuards(FirebaseAuthGuard)
   findOwnItems(@CurrentUser('uid') userId: string) {
     return this.itemsService.findOwnItems(userId);
   }
