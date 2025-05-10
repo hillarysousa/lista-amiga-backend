@@ -34,7 +34,7 @@ export class ListsService {
 
     const sharedLists = await this.listRepository.find({
       where: { participants: { uid: userId } },
-      relations: ['items', 'items.owner'],
+      relations: ['items', 'items.owner', 'participants'],
     });
 
     return [...ownedLists, ...sharedLists];
