@@ -48,14 +48,9 @@ export class ItemsService {
   }
 
   async findOwnItems(userId: string): Promise<ItemEntity[]> {
-    const user = await this.authService.findUser(userId);
-
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
     return this.itemRepository.find({
       where: { owner: { uid: userId } },
+      relations: ['list'],
     });
   }
 

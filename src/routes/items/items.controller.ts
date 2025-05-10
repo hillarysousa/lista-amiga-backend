@@ -34,7 +34,7 @@ export class ItemsController {
     return this.itemsService.findAllByListId(listId);
   }
 
-  @Get('own')
+  @Get('own/:userId')
   @UseGuards(FirebaseAuthGuard)
   findOwnItems(@CurrentUser('uid') userId: string) {
     return this.itemsService.findOwnItems(userId);
