@@ -1,21 +1,16 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as dotenv from 'dotenv';
 
-dotenv.config();
+const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
 
-const configPath = process.env.FIREBASE_CONFIG_PATH;
-
-if (!configPath) {
-  throw new Error('FIREBASE_CONFIG_PATH is not defined in .env');
+if (!serviceAccountBase64) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT_BASE64 não foi definida');
 }
 
-const serviceAccountPath = path.resolve(process.cwd(), configPath);
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+const serviceAccount = JSON.parse(
+  Buffer.from(serviceAccountBase64, 'base64').toString('utf-8'),
+);
 
 @Injectable()
 export class FirebaseAdminService implements OnModuleInit {
