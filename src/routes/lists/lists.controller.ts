@@ -49,9 +49,8 @@ export class ListsController {
   }
 
   @Get(':id')
-  @UseGuards(FirebaseAuthGuard)
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.listsService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.listsService.findOne(id);
   }
 
   @Post()
