@@ -24,6 +24,11 @@ export class ListsController {
     return this.listsService.findAll();
   }
 
+  @Get(':id')
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.listsService.findOne(id);
+  }
+
   @Get(':userId')
   @UseGuards(FirebaseAuthGuard)
   findUserLists(@CurrentUser('uid') userId: string) {
@@ -46,11 +51,6 @@ export class ListsController {
   @UseGuards(FirebaseAuthGuard)
   findListParticipants(@Param('listId') listId: string) {
     return this.listsService.findListParticipants(listId);
-  }
-
-  @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.listsService.findOne(id);
   }
 
   @Post()

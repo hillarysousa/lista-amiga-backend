@@ -21,6 +21,7 @@ export class ListsService {
   ) {}
 
   findAll(): Promise<ListEntity[]> {
+    console.log('find ALl!!!');
     return this.listRepository.find({
       relations: ['items', 'items.owner', 'owner', 'participants'],
     });
@@ -67,15 +68,11 @@ export class ListsService {
     return list.participants;
   }
 
-  async findOne(listId: string): Promise<ListEntity | null> {
-    const result = await this.listRepository.findOne({
+  findOne(listId: string): Promise<ListEntity | null> {
+    const result = this.listRepository.findOne({
       where: { id: listId },
       relations: ['items', 'items.owner', 'participants', 'owner'],
     });
-
-    if (!result) {
-      throw new NotFoundException('Lista não encontrada');
-    }
     return result;
   }
 
