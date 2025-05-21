@@ -100,7 +100,7 @@ export class ListsService {
     return this.listRepository.save(list);
   }
 
-  async createShareToken(listId: string): Promise<string> {
+  async createShareToken(listId: string): Promise<{ token: string }> {
     const list = await this.listRepository.findOne({ where: { id: listId } });
 
     if (!list) {
@@ -110,7 +110,7 @@ export class ListsService {
     list.shareToken = randomUUID();
     await this.listRepository.save(list);
 
-    return list.shareToken;
+    return { token: list.shareToken };
   }
 
   async revokeShareToken(listId: string): Promise<void> {
