@@ -29,7 +29,7 @@ export class ListsController {
     return this.listsService.findOne(id);
   }
 
-  @Get(':userId')
+  @Get('user/:userId')
   @UseGuards(FirebaseAuthGuard)
   findUserLists(@CurrentUser('uid') userId: string) {
     return this.listsService.findUserLists(userId);

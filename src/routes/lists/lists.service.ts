@@ -21,7 +21,6 @@ export class ListsService {
   ) {}
 
   findAll(): Promise<ListEntity[]> {
-    console.log('find ALl!!!');
     return this.listRepository.find({
       relations: ['items', 'items.owner', 'owner', 'participants'],
     });
