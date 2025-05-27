@@ -99,7 +99,9 @@ export class ItemsService {
       throw new UnauthorizedException('Usuário não é dono do item');
     }
 
-    item.checked = true;
+    const currentItemStatus = item.checked;
+
+    item.checked = !currentItemStatus;
 
     return this.itemRepository.save(item);
   }
