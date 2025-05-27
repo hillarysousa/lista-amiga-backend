@@ -71,7 +71,7 @@ export class ListsController {
   @Post('join/:shareToken')
   @UseGuards(FirebaseAuthGuard)
   joinListByToken(
-    @Param('token') token: string,
+    @Param('shareToken') token: string,
     @CurrentUser('uid') uid: string,
   ) {
     return this.listsService.joinListByToken(token, uid);
