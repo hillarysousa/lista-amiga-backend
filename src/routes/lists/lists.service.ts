@@ -128,8 +128,14 @@ export class ListsService {
   }
 
   async joinListByToken(token: string, userId: string): Promise<ListEntity> {
+    const basicList = await this.listRepository.findOneBy({
+      shareToken: token,
+    });
+
+    if (!basicList) throw new NotFoundException('Lista não encontrada');
+
     const list = await this.listRepository.findOne({
-      where: { shareToken: token },
+      where: { id: basicList.id },
       relations: ['participants'],
     });
 
